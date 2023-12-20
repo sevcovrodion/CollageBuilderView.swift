@@ -89,3 +89,38 @@ struct CollageBuilderView: View {
         .background(Color(uiColor: .systemBackground))
     }
     
+    @ViewBuilder
+    private var collageView: some View {
+        let gridView = GridView(xLines: 100, yLines: 100)
+            .opacity(store.state.isShowingGrid ? 1 : 0)
+        
+        CollageView(
+            collage: collage,
+            collageSize: collageSize,
+            selectedElement: store.state.selectedElement,
+            intermediateView: gridView,
+            isPlaying: store.state.isPlayingCollage
+        ) { store.dispatch(.gesture($0)) }
+    }
+    
+    var editorDescription: String {
+        switch store.state.selectedElement {
+        case .shape:
+            return "Shape Editor"
+        case .text:
+            return "Text Editor"
+        case .sticker:
+            return "Sticker Editor"
+        case .none:
+            return "Collage Editor"
+
+        }
+    }
+    
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        CollageBuilderView(store: .preview)
+    }
+}
